@@ -10,10 +10,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Main Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="InstLike" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="MainController" customModule="InstLike" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -24,15 +24,35 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="https://www.instagram.com/web/likes/1829636379405808927/like/" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="4aF-zs-ftG">
+                                <rect key="frame" x="8" y="292" width="359" height="30"/>
+                                <nil key="textColor"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KtS-PP-5l1">
+                                <rect key="frame" x="168" y="254" width="38" height="30"/>
+                                <state key="normal" title="LogIn"/>
+                                <connections>
+                                    <action selector="loginButtonAction" destination="BYZ-38-t0r" eventType="touchUpInside" id="5YD-Iw-Hv2"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="4aF-zs-ftG" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="8" id="Bc3-sI-Qkx"/>
                             <constraint firstItem="Qif-OY-qZv" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="EQF-I5-8mG"/>
+                            <constraint firstItem="KtS-PP-5l1" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="Kx7-il-tD4"/>
                             <constraint firstItem="Qif-OY-qZv" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="OLK-WA-td6"/>
+                            <constraint firstItem="4aF-zs-ftG" firstAttribute="top" secondItem="KtS-PP-5l1" secondAttribute="bottom" constant="8" id="R8C-Di-EOw"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="4aF-zs-ftG" secondAttribute="trailing" constant="8" id="bHC-ZF-T6k"/>
+                            <constraint firstItem="Qif-OY-qZv" firstAttribute="top" secondItem="4aF-zs-ftG" secondAttribute="bottom" constant="8.5" id="bVO-b1-VbQ"/>
+                            <constraint firstItem="4aF-zs-ftG" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="juD-Yg-eVb"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
+                        <outlet property="refToRequestField" destination="4aF-zs-ftG" id="gVz-7i-gaa"/>
                         <outlet property="statusLabel" destination="Qif-OY-qZv" id="4YE-lk-fhB"/>
                     </connections>
                 </viewController>
@@ -71,7 +91,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dlf-gQ-YVA" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="850" y="32"/>
+            <point key="canvasLocation" x="1402" y="32"/>
         </scene>
     </scenes>
 </document>

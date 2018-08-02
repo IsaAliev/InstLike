@@ -12,7 +12,7 @@ import WebKit
 class WebViewController: UIViewController {
     @IBOutlet weak var webView: WKWebView!
     
-    var onCsrfRetrieval: ((String, String) -> ())?
+    var onCookiesRetrieval: ((String, String) -> ())?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,58 +28,37 @@ class WebViewController: UIViewController {
 }
 
 extension WebViewController: WKNavigationDelegate {
-    
     func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
-        
-        
-        webView.configuration.websiteDataStore.httpCookieStore.getAllCookies { (cookies) in
-            var csrf: String?
-            var sessionId: String?
-            
-            var cookiesString = ""
-            
-            for cookie in cookies {
-                if cookie.name == "csrftoken" {
-                    csrf = cookie.value
-                }
-                
-                if cookie.name == "sessionid" {
-                    sessionId = cookie.value
-                }
-                
-                cookiesString.append("\(cookie.name)=\(cookie.value); ")
-            }
-            
-            if let csrf = csrf, sessionId != nil {
-                self.onCsrfRetrieval?(csrf, cookiesString)
-            }
+    
+        webView.configuration.websiteDataStore.httpCookieStore.getAllCookies { [weak self] (cookies) in
+            self?.checkCookiesAndPassIfPossible(cookies)
         }
         
         decisionHandler(.allow)
     }
     
-    
-    func retreiveCsrfIfPossible(_ response: URLResponse, completion: (String?, String?) -> ()) {
-        guard let httpResponse = response as? HTTPURLResponse else {
-            return completion(nil, nil)
-        }
+    func checkCookiesAndPassIfPossible(_ cookies: [HTTPCookie]) {
+        var csrf: String?
+        var sessionId: String?
         
-        let headers = httpResponse.allHeaderFields
+        var cookiesString = ""
         
-        guard let setCookies = headers["Set-Cookie"] as? String else {
-            return completion(nil, nil)
-        }
-        
-        let regexp = try? NSRegularExpression(pattern: "csrftoken=[^;]*", options: [])
-        
-        if let match = regexp?.firstMatch(in: setCookies, options: [], range: NSMakeRange(0, setCookies.count)) {
-            let csrfTokenEntry = (setCookies as NSString).substring(with: match.range)
+        for cookie in cookies {
+            let cookieName = cookie.name
             
-            let keyValue = csrfTokenEntry.split(separator: "=")
-            
-            if keyValue.count > 1 {
-                completion(String(csrfTokenEntry.split(separator: "=")[1]), setCookies)
+            if cookieName == "csrftoken" {
+                csrf = cookie.value
             }
+            
+            if cookieName == "sessionid" {
+                sessionId = cookie.value
+            }
+            
+            cookiesString.append("\(cookie.name)=\(cookie.value); ")
+        }
+        
+        if let csrf = csrf, sessionId != nil {
+            self.onCookiesRetrieval?(csrf, cookiesString)
         }
     }
 }
