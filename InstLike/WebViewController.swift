@@ -30,14 +30,34 @@ class WebViewController: UIViewController {
 extension WebViewController: WKNavigationDelegate {
     
     func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
-        retreiveCsrfIfPossible(navigationResponse.response) { csrf, cookie in
-            if let token = csrf {
-                onCsrfRetrieval?(token, cookie!)
+        
+        
+        webView.configuration.websiteDataStore.httpCookieStore.getAllCookies { (cookies) in
+            var csrf: String?
+            var sessionId: String?
+            
+            var cookiesString = ""
+            
+            for cookie in cookies {
+                if cookie.name == "csrftoken" {
+                    csrf = cookie.value
+                }
+                
+                if cookie.name == "sessionid" {
+                    sessionId = cookie.value
+                }
+                
+                cookiesString.append("\(cookie.name)=\(cookie.value); ")
+            }
+            
+            if let csrf = csrf, sessionId != nil {
+                self.onCsrfRetrieval?(csrf, cookiesString)
             }
         }
         
         decisionHandler(.allow)
     }
+    
     
     func retreiveCsrfIfPossible(_ response: URLResponse, completion: (String?, String?) -> ()) {
         guard let httpResponse = response as? HTTPURLResponse else {
